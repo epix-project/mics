@@ -89,7 +89,7 @@ varlist <- c("v001", "v002", "v004", "v005", "v008", "v012", "v013", "v021", "v0
 keep <- varlist %in% dhsvarlist
 create <- !varlist %in% dhsvarlist
 AFG2015 <- if (any(keep)) select(AFKR70, varlist[keep])
-###BUGGGGG
+### BUG 1
 # AFG2015 %>% if (any(create)) mutate(AFG2015, varlist[create] = NA) #TO CREATE EMPTY VARIABLES THAT DON'T EXIST WITH == NA
 
 ###DO WE NEED TO CREATE A NEW DATAFRAME HERE? OR JUST SAVE IT ALL AT THE END?
@@ -133,6 +133,8 @@ AFG2015 %<>%
 #   bysort v001 v002 v003: egen minbidx=min(bidx)
 #   replace ylclt24=. if bidx>minbidx /* need to drop those that are bidx==2 and minbidx==1*/
 
+### BUG 2
+# mutate code doesn't seem to run through with newly created variables. e.g. c_age. Have to start a new mutate command.
 
           # Strata variables
     mutate(age_class = cut(AFG2015$hw1, c(0, 6, 12, 24, 36, 48, 60), right = FALSE), ### HW1 EMPTY - not in all datasets...
@@ -259,6 +261,8 @@ AFG2015 %<>%
 
           # Immunisation
           ttv2 = m1 %in% c("2", "3", "4", "5", "6", "7"),   # Two or more TTV this pregnancy
+          ### BUG 3
+          # Code doesn't work as m1, m1d, m1a are recognised as a factors
           ### ttvok = ttv2 == "yes" |                   # Codes as "yes" if received 2 or more TTV this pregnancy
           #   ((m1+m1a)>1 & m1d<3 & m1<8 & m1a<8) |   # Codes as "yes" if received 2 or more TTV within last 3 years
           #   ((m1+m1a)>2 & m1d<5 & m1<8 & m1a<8) |   # Codes as "yes" if received 3 or more TTV within last 5 years
