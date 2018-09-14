@@ -1,5 +1,7 @@
 ### Packages
 
+nsdjfgsdjfgdj
+
 #The packages currently installed on your system:
 pkgs <- rownames(installed.packages())
 
@@ -18,8 +20,8 @@ library(lodown)     # get_catalog(), lodown()     ### IS THIS THE ONLY ONE USED?
 
 profile <- function(fct, ...) {
   fct(data_name     = "dhs",
-      your_email    = "slewycka@gmail.com", 
-      your_password = "********", 
+      your_email    = "slewycka@gmail.com",
+      your_password = "********",
       your_project  = "Global antibiotic consumption study", ...)
 }
 
