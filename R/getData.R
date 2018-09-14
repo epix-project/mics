@@ -1,7 +1,5 @@
 ### Packages
 
-nsdjfgsdjfgdj
-
 #The packages currently installed on your system:
 pkgs <- rownames(installed.packages())
 
