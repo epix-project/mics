@@ -17,10 +17,10 @@
 #' @param fct the function that should profiled.
 #' @param ... additional paramters to be passed to the profiled function.
 #'
-#' @return Returns the function `fct` with profile information predefined.
+#' @return Returns the function \code{fct} with profile information predefined.
 #'
-#' @seealso \link[mics]{\code{expand_catalog}}, \link[lodown]{\code{get_catalog}},
-#'  \link[lodown]{\code{lodown}}.
+#' @seealso \code{\link[mics]{expand_catalog}}, \link[lodown]{get_catalog},
+#'  \link[lodown]{lodown}.
 #'
 #' @examples
 #' ## Here is a typical 4-step pipeline that can be assembled into a function.

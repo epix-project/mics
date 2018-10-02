@@ -15,7 +15,7 @@ with_profile(profile, fct, ...)
 \item{...}{additional paramters to be passed to the profiled function.}
 }
 \value{
-Returns the function `fct` with profile information predefined.
+Returns the function \code{fct} with profile information predefined.
 }
 \description{
 \code{with_profile} adds a profile to a function of the package \code{lodown}
@@ -70,6 +70,6 @@ for(file in dir("dhs_data")) assign(sub(".rds", "", file), readRDS(file))
 
 }
 \seealso{
-\link[mics]{\code{expand_catalog}}, \link[lodown]{\code{get_catalog}},
- \link[lodown]{\code{lodown}}.
+\code{\link[mics]{expand_catalog}}, \link[lodown]{get_catalog},
+ \link[lodown]{lodown}.
 }
