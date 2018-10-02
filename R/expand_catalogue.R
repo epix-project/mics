@@ -9,7 +9,7 @@
 #' @return a data frame catalog has outputed by \code{\link[lodown]{get_catalog}},
 #' with three additional columns: \code{file_type}, \code{version_number} and
 #' \code{file_format}. See example in the documentation of
-#' \code{\link[lodown]{with_profile}}.
+#' \code{\link{with_profile}}.
 #'
 #' @export
 #'

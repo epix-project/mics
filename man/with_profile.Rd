@@ -70,6 +70,6 @@ for(file in dir("dhs_data")) assign(sub(".rds", "", file), readRDS(file))
 
 }
 \seealso{
-\code{\link[mics]{expand_catalog}}, \link[lodown]{get_catalog},
+\code{\link{expand_catalog}}, \link[lodown]{get_catalog},
  \link[lodown]{lodown}.
 }

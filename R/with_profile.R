@@ -19,7 +19,7 @@
 #'
 #' @return Returns the function \code{fct} with profile information predefined.
 #'
-#' @seealso \code{\link[mics]{expand_catalog}}, \link[lodown]{get_catalog},
+#' @seealso \code{\link{expand_catalog}}, \link[lodown]{get_catalog},
 #'  \link[lodown]{lodown}.
 #'
 #' @examples
