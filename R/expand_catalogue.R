@@ -14,5 +14,6 @@
 #' @export
 #'
 expand_catalogue <- function(x) {
-  bind_cols(x, split_code(get_code(x$full_url)))
+  file_name <- get_code(x$full_url)
+  bind_cols(x, file_name = file_name, split_code(file_name))
 }
