@@ -2,9 +2,12 @@
 
 export(expand_catalogue)
 export(get_catalog2)
+export(load_dhs)
 export(lodown2)
 export(with_profile)
+importFrom(dplyr,"%>%")
 importFrom(dplyr,filter)
+importFrom(dplyr,mutate)
 importFrom(lodown,get_catalog)
 importFrom(lodown,lodown)
 importFrom(magrittr,"%<>%")
