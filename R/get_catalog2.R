@@ -14,6 +14,7 @@
 #' \code{your_email}, \code{your_password} and \code{your_project}.
 #'
 #' @importFrom lodown get_catalog
+#' @importFrom magrittr %>%
 #'
 #' @export
 #'
@@ -29,5 +30,6 @@ get_catalog2 <- function(profile) {
     }
   }
   with_profile(profile, get_catalog)() %>%
-  `attr<-`("project", unname(profile["project"]))
+    expand_catalogue() %>%
+    `attr<-`("project", unname(profile["project"]))
 }
