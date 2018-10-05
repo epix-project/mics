@@ -25,10 +25,7 @@ get_catalog2 <- function(profile) {
       projects <- lapply(with_project, attr, "project")
       target_project <- projects[projects == profile["project"]]
       nb <- length(target_project)
-      if (nb > 1)  stop(paste("In the global environment there are already more than 1 catalog corresponding to that profile:",
-                              paste(names(target_project), collapse = ", ")))
-      if (nb == 1) stop(paste("In the global environment there is already the following catalog corresponding to that profile:",
-                              names(target_project)))
+      if (length(target_project) > 0) return(names(target_project))
     }
   }
   with_profile(profile, get_catalog)() %>%
