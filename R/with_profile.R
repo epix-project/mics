@@ -19,8 +19,8 @@
 #'
 #' @return Returns the function \code{fct} with profile information predefined.
 #'
-#' @seealso \code{\link{expand_catalog}}, \link[lodown]{get_catalog},
-#'  \link[lodown]{lodown}.
+#' @seealso \code{\link{expand_catalog}}, \code{\link[lodown]{get_catalog}},
+#'  \code{\link{lodown2}}.
 #'
 #' @examples
 #' ## Here is a typical 4-step pipeline that can be assembled into a function.
@@ -51,7 +51,7 @@
 #'   expand_catalogue() %>%
 #'   filter(year == 2015, country == "Tanzania", file_type == "KR") %>%
 #'   mutate(output_folder = "dhs_data") %>%  # defining the output folder
-#'   with_profile(gerald_profile, lodown)(catalog = .)
+#'   with_profile(gerald_profile, lodown2)(catalog = .)
 #' }
 #'
 #' ## step 4: loading all the data files to the workspace:

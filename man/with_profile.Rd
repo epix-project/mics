@@ -60,7 +60,7 @@ catalogue_gerald \%>\%
   expand_catalogue() \%>\%
   filter(year == 2015, country == "Tanzania", file_type == "KR") \%>\%
   mutate(output_folder = "dhs_data") \%>\%  # defining the output folder
-  with_profile(gerald_profile, lodown)(catalog = .)
+  with_profile(gerald_profile, lodown2)(catalog = .)
 }
 
 ## step 4: loading all the data files to the workspace:
@@ -70,6 +70,6 @@ for(file in dir("dhs_data")) assign(sub(".rds", "", file), readRDS(file))
 
 }
 \seealso{
-\code{\link{expand_catalog}}, \link[lodown]{get_catalog},
- \link[lodown]{lodown}.
+\code{\link{expand_catalog}}, \code{\link[lodown]{get_catalog}},
+ \code{\link{lodown2}}.
 }

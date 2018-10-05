@@ -18,6 +18,6 @@ catalogue_gerald %>%
   expand_catalogue() %>%
   filter(year == 2015, country == "Tanzania", file_type == "KR") %>%
   mutate(output_folder = "dhs_data") %>% # defining the output folder
-  with_profile(gerald_profile, lodown)(catalog = .)
+  with_profile(gerald_profile, lodown2)(catalog = .)
 
 # step 4: loading the data files:
