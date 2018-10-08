@@ -12,6 +12,7 @@
 #' \code{\link{with_profile}}.
 #'
 #' @importFrom dplyr bind_cols
+#' @importFrom lodown get_catalog
 #'
 #' @export
 #'
