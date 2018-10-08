@@ -31,5 +31,6 @@ get_catalog2 <- function(profile) {
   }
   with_profile(profile, get_catalog)() %>%
     expand_catalogue() %>%
-    `attr<-`("project", unname(profile["project"]))
+    `attr<-`("project", unname(profile["project"])) %>%
+    `attr<-`("data", unname(profile["data"]))
 }
