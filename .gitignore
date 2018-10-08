@@ -3,3 +3,4 @@
 .RData
 .Ruserdata
 .ignored/profiles.R
+inst/doc
