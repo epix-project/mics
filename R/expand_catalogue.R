@@ -11,6 +11,8 @@
 #' \code{file_format}. See example in the documentation of
 #' \code{\link{with_profile}}.
 #'
+#' @importFrom dplyr bind_cols
+#'
 #' @export
 #'
 expand_catalogue <- function(x) {
