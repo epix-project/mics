@@ -21,10 +21,10 @@
 get_catalog2 <- function(profile) {
   globenv <- as.list(.GlobalEnv)
   if (length(globenv) > 0) {
-    with_project <- globenv[sapply(globenv, function(x) "project" %in% names(attributes(x)))]
+    with_project <- globenv[sapply(globenv, function(x) "profile" %in% names(attributes(x)))]
     if (length(with_project) > 0) {
-      projects <- lapply(with_project, attr, "project")
-      target_project <- projects[projects == profile["project"]]
+      projects <- lapply(with_project, attr, "profile")
+      target_project <- projects[sapply(projects, identical, profile)]
       nb <- length(target_project)
       if (nb > 0) {
         name_targ_proj <- names(target_project[1])
@@ -37,8 +37,5 @@ get_catalog2 <- function(profile) {
   }
   with_profile(profile, get_catalog)() %>%
     expand_catalogue() %>%
-    `attr<-`("data"    , unname(profile["data"]))     %>%
-    `attr<-`("email"   , unname(profile["email"]))    %>%
-    `attr<-`("password", unname(profile["password"])) %>%
-    `attr<-`("project" , unname(profile["project"]))
+    `attr<-`("profile" , profile)
 }
