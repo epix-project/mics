@@ -59,6 +59,7 @@
 #' }
 #'
 #' @importFrom dplyr filter mutate %>%
+#' @importFrom dplyrx mutate2
 #'
 #' @export
 #'
@@ -76,6 +77,7 @@ load_dhs <- function(profile, ..., output = getwd()) {
 #  }
   catalog %>%
     filter(...) %>%
+#    filter(year == 2015, country == "Tanzania", file_type == "KR") %>%
     mutate2(output_folder = output) %>%
 #    with_profile(profile, lodown2)(catalog = .)
     lodown2()
