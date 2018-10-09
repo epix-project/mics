@@ -2,7 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
-.ignored/profiles.R
+ignored/profiles.R
 inst/doc
 vignettes/dhs_data/*
 vignettes/*cache/*
