@@ -21,9 +21,9 @@
 get_catalog2 <- function(profile) {
   globenv <- as.list(.GlobalEnv)
   if (length(globenv) > 0) {
-    with_project <- globenv[sapply(globenv, function(x) "profile" %in% names(attributes(x)))]
-    if (length(with_project) > 0) {
-      projects <- lapply(with_project, attr, "profile")
+    with_profile <- globenv[sapply(globenv, function(x) "profile" %in% names(attributes(x)))]
+    if (length(with_profile) > 0) {
+      projects <- lapply(with_profile, attr, "profile")
       target_project <- projects[sapply(projects, identical, profile)]
       nb <- length(target_project)
       if (nb > 0) {
