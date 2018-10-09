@@ -65,21 +65,12 @@
 #'
 load_dhs <- function(profile, ..., output = getwd()) {
   catalog <- get_catalog2(profile)
-#  if (is.character(catalog)) {
-#    if (length(catalog) > 1) stop("There are already more than one catalog in the global environment that corresponds to this profile's project.")
-#    cat(paste("There is already the following catalog in the global environment that corresponds to this profile's project:", catalog,
-#                  "\nWe will use this catalog to download the data if there are not already downloaded."))
-#    catalog <- get(catalog, .GlobalEnv)
-#  } else {
-    catalog_name <- paste0(as.list(match.call())$profile, "_catalog")
-    assign(catalog_name, catalog, envir = .GlobalEnv)
-    cat(paste0("The catalog has been save in the global environment under the name of '", catalog_name, "'.\n"))
-#  }
+  catalog_name <- paste0(as.list(match.call())$profile, "_catalog")
+  assign(catalog_name, catalog, envir = .GlobalEnv)
+  cat(paste0("The catalog has been save in the global environment under the name of '", catalog_name, "'.\n"))
   catalog %>%
     filter(...) %>%
-#    filter(year == 2015, country == "Tanzania", file_type == "KR") %>%
     mutate2(output_folder = output) %>%
-#    with_profile(profile, lodown2)(catalog = .)
     lodown2()
 
   data_files <- grep("FL.rds", dir(output), value = TRUE)
