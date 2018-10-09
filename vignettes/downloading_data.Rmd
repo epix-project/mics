@@ -18,34 +18,39 @@ knitr::opts_chunk$set(
 ```
 
 Here we explain how to download data from the UNAIDS/[DHS](https://dhsprogram.com)
-and UNICEF/[MICS](http://mics.unicef.org) servers. It works basically in 2 steps.
-First we need to download a **catalog** of data, which is a data frame that
-contains the data sets available on the server. Once we have this catalog of data,
-we can filter and mutate it in many ways before using it to download the actual
-data to disk. These 2 steps can take a lot of time, so it is good that we do not
-do things that have already be done and the function of `dhmics` take care of this.
-Note also that both the [DHS](https://dhsprogram.com) and [MICS](http://mics.unicef.org)
-servers require a login and a password. [DHS](https://dhsprogram.com) additionally
+and UNICEF/[MICS](http://mics.unicef.org) servers. It works basically in 2 steps:
+
+* first we need to download a **catalog** of data, which is a data frame that
+contains the data sets available on the server. This is done thanks to the
+function `get_catalog2()`.
+* once we have this catalog of data, we can filter and mutate it in many ways
+before using it to download the actual data to disk. This is done with the
+function `lodown2()`.
+
+These 2 steps can take a lot of time, so it is good that we do not do things that
+have already be done and the function of `dhmics` take care of this. We will also
+see at the end the pipeline function `load_dhs()` that combines these above 2
+steps together with other, making the data query and very easy process. Note also
+that both the [DHS](https://dhsprogram.com) and [MICS](http://mics.unicef.org)
+servers requirea login and a password. [DHS](https://dhsprogram.com) additionally
 requires a project's name that define the range of data that is available for
 download.
 
 ## Before we start...
 
-We will need of course the package `mics`, but also the package `dplyr` as well
-as the package `dplyrx`. Indeed, there is a bug in the `dplyr::mutate()` function
-that has been reported [here](https://github.com/tidyverse/dplyr/issues/3884),
-among other. Until that bug is fixed, we will use the `mutate2()` function from
-the package `dplyrx`. Compared to `dplyr::mutate()`, `dplyrx::mutate2()` preserves
-the non-class attributes that we really need here when working with catalogs of
-data. If these packages are not installed on your system, install them:
-
+We will need of course the package `mics`, but also the package `dplyr` as well.
+Note that there is a bug in the `dplyr::mutate()` function that has been reported [here](https://github.com/tidyverse/dplyr/issues/3884), among other. Until that
+bug is fixed, we will use the `mutate2()` function from the package `dplyrx` that
+is automatically installed and uploaded with `mics`. Compared to `dplyr::mutate()`,
+`dplyrx::mutate2()` preserves the non-class attributes that we really need here
+when working with catalogs of data. If these packages are not installed on your
+system, install them:
 
 ```{r}
 installed_packages <- rownames(installed.packages())
-if (! "devtools" %in% installed_packages) install.packages("devtools")
 if (! "dplyr" %in% installed_packages) install.packages("dplyr")
+if (! "devtools" %in% installed_packages) install.packages("devtools")
 if (! "mics" %in% installed_packages) devtools::install_github("epix-project/mics")
-if (! "dplyrx" %in% installed_packages) devtools::install_github("epix-project/dplyrx")
 ```
 
 And load them:
@@ -53,7 +58,6 @@ And load them:
 ```{r message = FALSE}
 library(dplyr)
 library(mics)
-library(dplyrx)
 ```
 
 ## Defining a profile
@@ -167,7 +171,8 @@ folder we want to put our downloaded data files. Now, the last step consists in
 uploading all these data file into the workspace. As simple as this:
 
 ```{r}
-for(file in dir("dhs_data")) assign(sub(".rds", "", file), readRDS(paste0("dhs_data/", file)))
+for(file in dir("dhs_data"))
+  assign(sub(".rds", "", file), readRDS(paste0("dhs_data/", file)))
 ```
 
 And here are our data files:
@@ -182,3 +187,79 @@ In that case:
 dim(TZKR7AFL)
 ```
 
+## Time efficiency of `get_catalog2()` and `lodown2()`
+
+One very interesting aspect of `get_catalog2()` and `lodown2()` compare to
+`lodown::get_catalog()` and `lodown::lodown()` is that they don't do things if
+they can detect that they've already been, which, potentially, save a lot of
+time. Demonstration: when there is no catalog in the working environment that
+corresponds to the profile fed to `get_catalog2()`, it downloads it from the
+server, which takes time:
+
+```{r}
+rm(my_dhs_catalog)
+system.time(my_dhs_catalog <- get_catalog2(my_dhs_profile))
+```
+
+Once there is a catalog in the working environment that corresponds to the
+profile fed to `get_catalog2()`, it just returns it, instantaneously:
+
+```{r}
+system.time(my_dhs_catalog <- get_catalog2(my_dhs_profile))
+```
+
+If there are more than one catalog in the working environment that correspond to
+the profile fed to `get_catalog2()`, it informs the user and returns one of them:
+
+```{r}
+my_dhs_catalog2 <- my_dhs_catalog
+my_dhs_catalog <- get_catalog2(my_dhs_profile)
+```
+
+Same thing for the `lodown2()` function: if the data files we aim to download
+do not exist on disk, it downloads them as above. But if these files already
+exist on disk, it doesn't download them again and informs the user that the files
+already exist. It will download only the files that are not already on disk:
+
+```{r}
+my_dhs_catalog %>% 
+  filter(year == 2015, country == "Tanzania", file_type == "KR") %>% 
+  mutate2(output_folder = "dhs_data") %>% 
+  lodown2()
+```
+
+## A pipeline
+
+Finally, the function `load_dhs()` combines the following 4 steps once provided
+a given profile:
+
+* `get_catalog2()` downloads the catalog of data corresponding to the profile if
+not already in the working environment;
+* the catalog can be `filter()`ed according to inputed predicates;
+* `lodown2()` downloads the data files corresponding to the `filter()`ed catalog
+if they are not already on disk;
+* the data are loaded from disk to the workspace if they are not already in there.
+
+Demonstration: the above operations can be done in one go. For the purpose of the
+demonstration, let's start from a virgin state:
+
+```{r}
+rm(my_dhs_catalog, my_dhs_catalog2, TZKR7AFL)
+file.remove("dhs_data/TZKR7AFL.rds")
+```
+
+And let's time the pipeline:
+
+```{r}
+system.time(load_dhs(my_dhs_profile, year == 2015, country == "Tanzania", file_type == "KR", output = "dhs_data"))
+```
+
+This is particularly useful if we want to get a lot of data at once. Note also,
+that this function benefits from the above-described time efficiencies of
+`get_catalog2()` and `lodown2()`, and additionally does not load the data form
+disk to the working environment is they are already there. Demonstration by
+running the previous call a second time:
+
+```{r}
+system.time(load_dhs(my_dhs_profile, year == 2015, country == "Tanzania", file_type == "KR", output = "dhs_data"))
+```
