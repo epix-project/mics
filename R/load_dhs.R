@@ -73,7 +73,7 @@ load_dhs <- function(profile, ..., output = getwd()) {
 #  } else {
     catalog_name <- paste0(as.list(match.call())$profile, "_catalog")
     assign(catalog_name, catalog, envir = .GlobalEnv)
-    cat(paste0("The catalog has been save in the global environment under the name of '", catalog_name, "'."))
+    cat(paste0("The catalog has been save in the global environment under the name of '", catalog_name, "'.\n"))
 #  }
   catalog %>%
     filter(...) %>%
