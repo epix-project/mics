@@ -27,11 +27,11 @@ get_catalog2 <- function(profile) {
       target_profile <- projects[sapply(projects, identical, profile)]
       nb <- length(target_profile)
       if (nb > 0) {
-        name_targ_proj <- names(target_profile[1])
+        name_targ_prof <- names(target_profile[1])
         if (nb > 1) warning(paste("In the global environment, there are already the following catalogs corresponding to the inputed profile:\n   ",
                             paste(names(target_profile), collapse = ", "),
-                            "\n  Here we return", name_targ_proj))
-        return(get(name_targ_proj, envir = .GlobalEnv))
+                            "\n  Here we return", name_targ_prof))
+        return(get(name_targ_prof, envir = .GlobalEnv))
       }
     }
   }
