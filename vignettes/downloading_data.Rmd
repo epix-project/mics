@@ -11,8 +11,174 @@ editor_options:
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
+  cache = TRUE,
   collapse = TRUE,
   comment = "#>"
 )
+```
+
+Here we explain how to download data from the UNAIDS/[DHS](https://dhsprogram.com)
+and UNICEF/[MICS](http://mics.unicef.org) servers. It works basically in 2 steps.
+First we need to download a **catalog** of data, which is a data frame that
+contains the data sets available on the server. Once we have this catalog of data,
+we can filter and mutate it in many ways before using it to download the actual
+data to disk. These 2 steps can take a lot of time, so it is good that we do not
+do things that have already be done and the function of `dhmics` take care of this.
+Note also that both the [DHS](https://dhsprogram.com) and [MICS](http://mics.unicef.org)
+servers require a login and a password. [DHS](https://dhsprogram.com) additionally
+requires a project's name that define the range of data that is available for
+download.
+
+## Before we start...
+
+We will need of course the package `mics`, but also the package `dplyr` as well
+as the package `dplyrx`. Indeed, there is a bug in the `dplyr::mutate()` function
+that has been reported [here](https://github.com/tidyverse/dplyr/issues/3884),
+among other. Until that bug is fixed, we will use the `mutate2()` function from
+the package `dplyrx`. Compared to `dplyr::mutate()`, `dplyrx::mutate2()` preserves
+the non-class attributes that we really need here when working with catalogs of
+data. If these packages are not installed on your system, install them:
+
+
+```{r}
+installed_packages <- rownames(installed.packages())
+if (! "devtools" %in% installed_packages) install.packages("devtools")
+if (! "dplyr" %in% installed_packages) install.packages("dplyr")
+if (! "mics" %in% installed_packages) devtools::install_github("epix-project/mics")
+if (! "dplyrx" %in% installed_packages) devtools::install_github("epix-project/dplyrx")
+```
+
+And load them:
+
+```{r message = FALSE}
+library(dplyr)
+library(mics)
+library(dplyrx)
+```
+
+## Defining a profile
+
+The first thing to do is to define a profile once for all. This profile will be
+used whenever needed. Here a profile is simply a named character vector that
+contains the following 4 lines of information:
+
+* `data`: the name of the data base that we want to query, either `"dhs"` or
+`"mics"`. Note that a profile characterize one given project from one given
+repository ([DHS](https://dhsprogram.com) or [MICS](http://mics.unicef.org));
+* `email`: the email address used as a login for access to the server;
+* `password`: the password used to access to the server and fitting to the email
+address login;
+* `project`: the name of the project. This is mandatory for queries to
+[DHS](https://dhsprogram.com) only.
+
+Here is an example of a profile:
+
+```{r}
+my_dhs_profile <- c(data     = "dhs",
+                    email    = "marc.choisy@ird.fr",
+                    password = "********",
+                    project  = "My fake project on DHS")
+```
+
+(here the password is hidden, for obvious reasons.)
+
+```{r include = FALSE}
+my_dhs_profile <- c(data     = "dhs",
+                    email    = "gerald.makuka@stx.ox.ac.uk",
+                    password = "gerald22",
+                    project  = "Antibiotics usage amongst under fiv")
+```
+
+## Downloading the catalog of data
+
+Once the profile is defined, we can proceed to downlaod the catalog with the
+function `get_catalog2`. This function is a wrapper around the
+`lodown::get_catalog` function that allow to specify the profile. Downloading the
+catalog of data corresponding to the defined profile is as simple as this:
+
+```{r eval = FALSE}
+my_dhs_catalog <- get_catalog2(my_dhs_profile)
+```
+
+```{r include = FALSE}
+if (file.exists("my_dhs_catalog.rds")) {
+  my_dhs_catalog <- readRDS("my_dhs_catalog.rds")
+} else {
+  my_dhs_catalog <- get_catalog2(my_dhs_profile)
+  saveRDS(my_dhs_catalog, "my_dhs_catalog.rds")
+}
+```
+
+Note that this step for example takes about **20 seconds** on a MacBook Pro. To
+download the whole DHS data set on the same computer, it takes about **20 minutes**.
+As mentioned above, the catalog of data is a mere data frame:
+
+```{r}
+names(my_dhs_catalog)
+```
+
+and
+
+```{r}
+dim(my_dhs_catalog)
+```
+
+and
+
+```{r}
+my_dhs_catalog %>% 
+  select(-output_folder, -full_url) %>% 
+  head()
+```
+
+and
+
+```{r}
+my_dhs_catalog %>% 
+  select(-output_folder, -full_url) %>% 
+  str()
+```
+
+Note that I selected out the variables `output_folder` and `full_url` as their
+values are very long and the printing would have been a bit messy.
+
+## Downloading specific data from the catalog
+
+Once the catalog is downloaded, we can use it to `filter` or `mutate2` it the
+way we want and then download the corresponding data sets to disk with the
+`lodown2` function.
+
+```{r include = FALSE}
+my_dhs_catalog %>% 
+  filter(year == 2015, country == "Tanzania", file_type == "KR") %>% 
+  mutate2(output_folder = "dhs_data") %>% 
+  lodown2()
+```
+
+```{r eval = FALSE}
+my_dhs_catalog %>% 
+  filter(year == 2015, country == "Tanzania", file_type == "KR") %>% 
+  mutate2(output_folder = "dhs_data") %>% 
+  lodown2()
+```
+
+Note here that we use the function `mutate2()` to overwrite the destination
+folder we want to put our downloaded data files. Now, the last step consists in
+uploading all these data file into the workspace. As simple as this:
+
+```{r}
+for(file in dir("dhs_data")) assign(sub(".rds", "", file), readRDS(paste0("dhs_data/", file)))
+```
+
+And here are our data files:
+
+```{r}
+ls()
+```
+
+In that case:
+
+```{r}
+dim(TZKR7AFL)
 ```
 
