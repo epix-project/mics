@@ -24,3 +24,8 @@ RoxygenNote: 6.1.0
 Suggests: knitr,
     rmarkdown
 VignetteBuilder: knitr
+Imports: dplyr,
+    lodown,
+    magrittr,
+    dplyrx
+Remotes: epix-project/dplyrx
