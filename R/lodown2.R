@@ -16,9 +16,14 @@
 #'
 #' @export
 #'
-lodown2 <- function(catalog = NULL, ...) {
+lodown2 <- function(catalog = NULL) {
   stopifnot(! is.null(catalog))
   catalog %<>% filter(! file.exists(paste0(output_folder, "/", unique(sub("..$", "FL", file_name)), ".rds")))
-  if (nrow(catalog) > 0) lodown(catalog = catalog, ...)
+  profile <- attr(catalog, "profile")
+  if (nrow(catalog) > 0) lodown(profile["data"],
+                                catalog,
+                                your_email    = profile["email"],
+                                your_password = profile["password"],
+                                your_project  = profile["project"])
   else cat("The data already exist on disk.")
 }

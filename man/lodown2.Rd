@@ -4,7 +4,7 @@
 \alias{lodown2}
 \title{Locally Download Publicly-available data}
 \usage{
-lodown2(catalog = NULL, ...)
+lodown2(catalog = NULL)
 }
 \arguments{
 \item{catalog}{\code{data.frame} detailing available microdata extracts and
