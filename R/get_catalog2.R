@@ -24,12 +24,12 @@ get_catalog2 <- function(profile) {
     with_profile <- globenv[sapply(globenv, function(x) "profile" %in% names(attributes(x)))]
     if (length(with_profile) > 0) {
       projects <- lapply(with_profile, attr, "profile")
-      target_project <- projects[sapply(projects, identical, profile)]
-      nb <- length(target_project)
+      target_profile <- projects[sapply(projects, identical, profile)]
+      nb <- length(target_profile)
       if (nb > 0) {
-        name_targ_proj <- names(target_project[1])
+        name_targ_proj <- names(target_profile[1])
         if (nb > 1) warning(paste("In the global environment, there are already the following catalogs corresponding to the inputed profile:\n   ",
-                            paste(names(target_project), collapse = ", "),
+                            paste(names(target_profile), collapse = ", "),
                             "\n  Here we return", name_targ_proj))
         return(get(name_targ_proj, envir = .GlobalEnv))
       }
