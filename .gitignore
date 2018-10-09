@@ -4,3 +4,8 @@
 .Ruserdata
 .ignored/profiles.R
 inst/doc
+vignettes/dhs_data/*
+vignettes/*cache/*
+vignettes/*.rds
+*.rds
+
